@@ -1,73 +1,73 @@
 # Web Form Filling
 
-Bot de RPA em Python que lê respostas de uma planilha Excel e as envia, uma a uma, para um Google Forms de pesquisa de satisfação de funcionários. Construído com o [BotCity Web](https://documentation.botcity.dev/tutorials/python-automations/web/) (Selenium) e integrável ao BotCity Maestro.
+An RPA bot in Python that reads responses from an Excel spreadsheet and submits them, one by one, to a Google Forms employee satisfaction survey. Built with [BotCity Web](https://documentation.botcity.dev/tutorials/python-automations/web/) (Selenium) and integrable with BotCity Maestro.
 
-## Como funciona
+## How It Works
 
-1. Lê a planilha `Satisfaction.xlsx` com o pandas.
-2. Abre o formulário no Chrome.
-3. Para cada linha da planilha, preenche os campos, envia a resposta e clica em "Enviar outra resposta".
-4. Fecha o navegador e reporta o resultado ao Maestro (quando conectado).
+1. Reads the `Satisfaction.xlsx` spreadsheet with pandas.
+2. Opens the form in Chrome.
+3. For each row in the spreadsheet, fills in the fields, submits the response, and clicks "Submit another response".
+4. Closes the browser and reports the result to Maestro (when connected).
 
-### Campos do formulário
+### Form Fields
 
-| Coluna da planilha  | Campo no formulário    | Tipo                |
-|---------------------|------------------------|---------------------|
-| `Employee Name`     | Employee name          | Texto               |
-| `Years of Service`  | Years of Service       | Texto               |
-| `Department`        | Department             | Lista suspensa      |
-| `Satisfaction Rating` | Employee satisfaction | Escala (opções)     |
+| Spreadsheet Column    | Form Field            | Type                |
+|-----------------------|-----------------------|---------------------|
+| `Employee Name`       | Employee name         | Text                |
+| `Years of Service`    | Years of Service      | Text                |
+| `Department`          | Department            | Dropdown            |
+| `Satisfaction Rating` | Employee satisfaction | Scale (options)     |
 
-## Requisitos
+## Requirements
 
 - Python 3.8+
-- Google Chrome e o [ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/) compatível com a sua versão
-- Windows (os caminhos padrão do projeto são de Windows)
+- Google Chrome and a [ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/) compatible with your version
+- Windows (the project's default paths are Windows paths)
 
-## Instalação
+## Installation
 
 ```bash
-git clone <url-do-repositorio>
+git clone <repository-url>
 cd Web-Form-Filling
 python -m venv .venv
 .venv\Scripts\activate
 pip install --upgrade -r requirements.txt
 ```
 
-## Configuração
+## Configuration
 
-Os valores abaixo estão fixos em [bot.py](bot.py) e devem ser ajustados ao seu ambiente:
+The values below are hardcoded in [bot.py](bot.py) and should be adjusted to your environment:
 
-| Item                  | Padrão                                            | Onde alterar                  |
+| Item                  | Default                                           | Where to change               |
 |-----------------------|---------------------------------------------------|-------------------------------|
-| Caminho do ChromeDriver | `C:\chromedriver-win64\chromedriver.exe`        | `bot.driver_path`             |
-| Planilha de entrada   | `C:\Projects\Satisfaction.xlsx`                   | `pd.read_excel(...)`          |
-| URL do formulário     | Google Forms de exemplo                           | `bot.browse(...)`             |
-| Modo headless         | `False` (navegador visível)                       | `bot.headless`                |
+| ChromeDriver path     | `C:\chromedriver-win64\chromedriver.exe`          | `bot.driver_path`             |
+| Input spreadsheet     | `C:\Projects\Satisfaction.xlsx`                   | `pd.read_excel(...)`          |
+| Form URL              | Sample Google Form                                | `bot.browse(...)`             |
+| Headless mode         | `False` (visible browser)                         | `bot.headless`                |
 
-### Formato da planilha
+### Spreadsheet Format
 
-A planilha precisa ter exatamente estas colunas:
+The spreadsheet must have exactly these columns:
 
 | Employee Name | Years of Service | Department | Satisfaction Rating |
 |---------------|------------------|------------|---------------------|
 | Maria Silva   | 5                | Sales      | 4                   |
 
-Os valores de `Department` e `Satisfaction Rating` devem corresponder exatamente às opções existentes no formulário.
+The `Department` and `Satisfaction Rating` values must exactly match the options available in the form.
 
-> **Atenção:** os seletores e os textos dos botões ("Enviar", "Enviar outra resposta") assumem um formulário com interface em **português**. Se o seu formulário estiver em outro idioma, ajuste os XPaths em [bot.py](bot.py).
+> **Note:** the selectors and button texts ("Submit", "Submit another response") assume a form with a **Portuguese** interface. If your form is in another language, adjust the XPaths in [bot.py](bot.py).
 
-## Uso
+## Usage
 
 ```bash
 python bot.py
 ```
 
-Executado localmente, o bot funciona sem o Maestro: `BotMaestroSDK.RAISE_NOT_CONNECTED = False` evita erros quando não há conexão.
+When run locally, the bot works without Maestro: `BotMaestroSDK.RAISE_NOT_CONNECTED = False` prevents errors when there is no connection.
 
-## Empacotamento para o BotCity Maestro
+## Packaging for BotCity Maestro
 
-Gera o `WebFormFilling.zip` pronto para upload no Maestro:
+Generates `WebFormFilling.zip`, ready to upload to Maestro:
 
 ```bash
 # Windows (PowerShell)
@@ -80,25 +80,25 @@ build.bat
 ./build.sh
 ```
 
-## Estrutura do projeto
+## Project Structure
 
 ```
 .
-├── bot.py                 # Lógica principal do bot
-├── requirements.txt       # Dependências
-├── WebFormFilling.botproj # Metadados do projeto BotCity
-├── build.bat | .ps1 | .sh # Scripts de empacotamento
-└── resources/             # Recursos do bot (imagens)
+├── bot.py                 # Main bot logic
+├── requirements.txt       # Dependencies
+├── WebFormFilling.botproj # BotCity project metadata
+├── build.bat | .ps1 | .sh # Packaging scripts
+└── resources/             # Bot resources (images)
 ```
 
-## Tecnologias
+## Technologies
 
 - [BotCity Web Framework](https://documentation.botcity.dev/)
 - [BotCity Maestro SDK](https://documentation.botcity.dev/maestro/)
-- [pandas](https://pandas.pydata.org/) e [openpyxl](https://openpyxl.readthedocs.io/)
+- [pandas](https://pandas.pydata.org/) and [openpyxl](https://openpyxl.readthedocs.io/)
 
-## Solução de problemas
+## Troubleshooting
 
-- **`ModuleNotFoundError: No module named 'botcity'`**: o interpretador em uso não é o mesmo em que as dependências foram instaladas. Reinstale com `pip install --upgrade -r requirements.txt` no interpretador correto.
-- **Elemento não encontrado**: o layout do Google Forms mudou ou o idioma é diferente; revise os XPaths.
-- **Erro de versão do driver**: a versão do ChromeDriver precisa ser compatível com a do Chrome instalado.
+- **`ModuleNotFoundError: No module named 'botcity'`**: the interpreter in use is not the one where the dependencies were installed. Reinstall with `pip install --upgrade -r requirements.txt` in the correct interpreter.
+- **Element not found**: the Google Forms layout changed or the language is different; review the XPaths.
+- **Driver version error**: the ChromeDriver version must be compatible with the installed Chrome version.
